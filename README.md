@@ -68,22 +68,38 @@ The server runs on `http://localhost:3000` (or your `PORT` env var).
 
 ## Testing
 
-Unit tests are in the `tests/` directory and use Jest with TypeScript.
+Tests are in the `tests/` directory and use Jest with TypeScript.
 
-### Run Tests
+### Unit Tests
+
+Unit tests mock the database and test controller logic in isolation.
 
 ```bash
-npm test                # Run all tests once
-npm run test:watch     # Run tests in watch mode (re-run on file changes)
+npm test                # Run unit tests once
+npm run test:watch     # Run tests in watch mode
 npm run test:coverage  # Run tests and generate coverage report
 ```
 
-### Test Structure
+**Location:** `tests/controllers/` and `tests/middleware/`
 
-- `tests/controllers/` — Controller unit tests
-- `tests/middleware/` — Middleware unit tests
+### Integration Tests
 
-Tests mock the database pool to verify controller logic in isolation without needing a live DB.
+Integration tests hit real API endpoints with test data in the database.
+
+```bash
+npm run test:integration  # Run integration tests
+npm run test:all          # Run all unit and integration tests
+```
+
+**Location:** `tests/integration/`
+
+**How they work:**
+1. `tests/fixtures/seed.ts` populates the database with test data before tests run
+2. Tests use `supertest` to make HTTP requests to the actual Express app
+3. Responses are verified (status codes, response bodies, etc.)
+4. Database is cleaned up after tests complete
+
+**Test coverage:** Users and Tasks endpoints (GET, POST, PUT, DELETE operations)
 
 ## API Route Groups
 
