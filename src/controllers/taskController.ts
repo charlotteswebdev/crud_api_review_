@@ -15,6 +15,15 @@ const validateTaskInput = (title: unknown, status: unknown, project_id: unknown)
   if (typeof project_id !== "number" && typeof project_id !== "string") {
     return "project_id must be a number";
   }
+  const projectIdNumber =
+    typeof project_id === "number"
+      ? project_id
+      : typeof project_id === "string"
+        ? Number(project_id)
+        : NaN;
+  if (!Number.isFinite(projectIdNumber)) {
+    return "project_id must be a valid numeric value";
+  }
   return null;
 };
 

@@ -1,10 +1,18 @@
 import { pool } from "../../src/config/db";
 import { randomBytes } from "crypto";
 
-// Generate a unique identifier for this test run
 const testId = randomBytes(8).toString("hex");
 
 export const seedTestData = async () => {
+       const dbName = process.env.DB_NAME;
+   if (process.env.NODE_ENV !== "test") {
+     throw new Error("Refusing to seed database when NODE_ENV is not 'test'");
+   }
+   if (!dbName || !/test/i.test(dbName)) {
+     throw new Error(
+       `Refusing to seed non-test database: DB_NAME=${dbName ?? "<empty>"}`
+     );
+   }
   try {
     await pool.execute("SET FOREIGN_KEY_CHECKS=0");
     await pool.execute("TRUNCATE TABLE comments");
@@ -78,6 +86,15 @@ export const seedTestData = async () => {
 };
 
 export const cleanupTestData = async () => {
+  const dbName = process.env.DB_NAME;
+  if (process.env.NODE_ENV !== "test") {
+    throw new Error("Refusing to cleanup database when NODE_ENV is not 'test'");
+  }
+  if (!dbName || !/test/i.test(dbName)) {
+    throw new Error(
+      `Refusing to cleanup non-test database: DB_NAME=${dbName ?? "<empty>"}`
+    );
+  }
   try {
     await pool.execute("SET FOREIGN_KEY_CHECKS=0");
     await pool.execute("TRUNCATE TABLE comments");
@@ -88,5 +105,6 @@ export const cleanupTestData = async () => {
     console.log("Test data cleaned up");
   } catch (error) {
     console.error("Error cleaning up test data:", error);
+    throw error;
   }
 };

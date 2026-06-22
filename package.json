@@ -10,6 +10,7 @@
     "test:integration": "jest --config jest.config.integration.js --forceExit",
     "test:all": "npm run test && npm run test:integration",
     "dev": "node ./node_modules/ts-node-dev/lib/bin.js src/server.ts",
+    "seed:dev": "node ./node_modules/ts-node-dev/lib/bin.js src/scripts/seedDev.ts",
     "build": "node ./node_modules/typescript/bin/tsc",
     "start": "node dist/server.js"
   },
