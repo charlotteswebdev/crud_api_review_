@@ -66,6 +66,25 @@ npm start
 
 The server runs on `http://localhost:3000` (or your `PORT` env var).
 
+## Testing
+
+Unit tests are in the `tests/` directory and use Jest with TypeScript.
+
+### Run Tests
+
+```bash
+npm test                # Run all tests once
+npm run test:watch     # Run tests in watch mode (re-run on file changes)
+npm run test:coverage  # Run tests and generate coverage report
+```
+
+### Test Structure
+
+- `tests/controllers/` — Controller unit tests
+- `tests/middleware/` — Middleware unit tests
+
+Tests mock the database pool to verify controller logic in isolation without needing a live DB.
+
 ## API Route Groups
 
 - `/users`

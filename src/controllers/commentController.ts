@@ -2,8 +2,32 @@ import { Request, Response } from "express";
 import { ResultSetHeader } from "mysql2";
 import { pool } from "../config/db";
 
+const validateCommentInput = (content: unknown, task_id: unknown, user_id: unknown): string | null => {
+  if (typeof content !== "string" || content.trim() === "") {
+    return "content is required and must be a non-empty string";
+  }
+  if (task_id === null || task_id === undefined) {
+    return "task_id is required";
+  }
+  if (typeof task_id !== "number" && typeof task_id !== "string") {
+    return "task_id must be a number";
+  }
+  if (user_id === null || user_id === undefined) {
+    return "user_id is required";
+  }
+  if (typeof user_id !== "number" && typeof user_id !== "string") {
+    return "user_id must be a number";
+  }
+  return null;
+};
+
 export const createComment = async (req: Request, res: Response) => {
   const { content, task_id, user_id } = req.body;
+
+  const validationError = validateCommentInput(content, task_id, user_id);
+  if (validationError) {
+    return res.status(400).json({ message: validationError });
+  }
 
     const [result] = await pool.execute(
         "INSERT INTO comments (content, task_id, user_id) VALUES (?, ?, ?)",
@@ -55,11 +79,21 @@ export const getCommentById = async (req: Request, res: Response) => {
 export const updateComment = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { content, task_id, user_id } = req.body;
+
+  const validationError = validateCommentInput(content, task_id, user_id);
+  if (validationError) {
+    return res.status(400).json({ message: validationError });
+  }
   
-  await pool.execute(
+  const [result] = await pool.execute<ResultSetHeader>(
     "UPDATE comments SET content = ?, task_id = ?, user_id = ? WHERE id = ?",
     [content, task_id, user_id, id]
   );
+
+  if (result.affectedRows === 0) {
+    return res.status(404).json({ message: "Comment not found" });
+  }
+
   res.status(200).json({ message: "Comment updated" });
 };
 

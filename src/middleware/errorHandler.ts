@@ -8,8 +8,14 @@ export const errorHandler = (
 ) => {
   const error = err as { message?: string; status?: number; statusCode?: number };
   const statusCode = error.statusCode ?? error.status ?? 500;
+  const isDevelopment = process.env.NODE_ENV === "development";
+  const is5xx = statusCode >= 500;
 
-  res.status(statusCode).json({
-    message: error.message ?? "Internal Server Error",
-  });
+  // Only expose detailed error messages in development or for non-5xx errors
+  const message =
+    isDevelopment || !is5xx
+      ? error.message ?? "Internal Server Error"
+      : "Internal Server Error";
+
+  res.status(statusCode).json({ message });
 };
