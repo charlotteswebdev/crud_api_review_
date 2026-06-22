@@ -27,19 +27,38 @@ Simple TypeScript + Express + MySQL CRUD API.
    DB_HOST=localhost
    DB_USER=root
    DB_PASSWORD=your_password
-   DB_NAME=test_db
+   DB_NAME=dev_db
+   TEST_DB_NAME=test_db
    PORT=3000
+   NODE_ENV=development
    ```
 
-   **Note:** `.env` is git-ignored and never committed. Each developer maintains their own local copy.
+   **Note:** 
+   - `.env` is git-ignored and never committed. Each developer maintains their own local copy.
+   - `DB_NAME` is used for development
+   - `TEST_DB_NAME` is used for running tests (isolated test database)
 
-3. Initialize the database schema:
+3. Initialize the database:
 
+   **Option 1: Auto-seed development database (recommended)**
+   
+   ```bash
+   npm run seed:dev
+   ```
+   
+   This creates the `dev_db` database, initializes the schema, and populates it with sample data.
+
+   **Option 2: Manual schema initialization**
+   
+   ```bash
    mysql -u root < db/schema.sql
-
+   ```
+   
    If your MySQL user has a password:
-
+   
+   ```bash
    mysql -u root -p < db/schema.sql
+   ```
 
 ## Running the API
 
@@ -52,6 +71,25 @@ npm run dev
 - Watches source files for changes and auto-restarts the server
 - Use this while developing
 - Server runs on `http://localhost:3000`
+
+### Seeding Development Data
+
+To repopulate the development database with fresh sample data:
+
+```bash
+npm run seed:dev
+```
+
+This command:
+1. Creates the `dev_db` database (if it doesn't exist)
+2. Initializes the schema (users, projects, tasks, comments tables)
+3. Populates the database with sample data:
+   - 4 users
+   - 3 projects
+   - 8 tasks
+   - 7 comments
+
+Useful for testing API endpoints and viewing data in development.
 
 ### Production Mode
 

@@ -7,6 +7,7 @@ import { createConnection } from 'mysql2/promise';
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const seedDevData = async () => {
+  let pool: any;
   try {
     console.log('🌱 Setting up dev database...');
 
@@ -27,7 +28,7 @@ const seedDevData = async () => {
 
     // Now connect to the dev database to run schema and seed
     const { createPool } = require('mysql2/promise');
-    const pool = createPool({
+    pool = createPool({
       host: process.env.DB_HOST || 'localhost',
       user: process.env.DB_USER || 'root',
       password: process.env.DB_PASSWORD || '',
@@ -44,7 +45,8 @@ const seedDevData = async () => {
     // Split schema by statements and execute each
     const statements = schema.split(';').filter(stmt => stmt.trim());
     for (const statement of statements) {
-      if (!statement.includes('CREATE DATABASE')) {
+      // Skip CREATE DATABASE and USE statements (already connected to dev_db)
+      if (!statement.includes('CREATE DATABASE') && !statement.includes('USE ')) {
         await pool.execute(statement + ';');
       }
     }
