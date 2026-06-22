@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS projects (
   name VARCHAR(255),
   owner_id INT,
   FOREIGN KEY (owner_id) REFERENCES users(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS tasks (
@@ -20,6 +22,8 @@ CREATE TABLE IF NOT EXISTS tasks (
   status VARCHAR(50),
   project_id INT,
   FOREIGN KEY (project_id) REFERENCES projects(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS comments (
@@ -28,6 +32,10 @@ CREATE TABLE IF NOT EXISTS comments (
   task_id INT,
   user_id INT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (task_id) REFERENCES tasks(id),
+  FOREIGN KEY (task_id) REFERENCES tasks(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );

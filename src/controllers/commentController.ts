@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { ResultSetHeader } from "mysql2";
 import { pool } from "../config/db";
 
 export const createComment = async (req: Request, res: Response) => {
@@ -65,6 +66,11 @@ export const updateComment = async (req: Request, res: Response) => {
 export const deleteComment = async (req: Request, res: Response) => {
   const { id } = req.params;
   
-  await pool.execute("DELETE FROM comments WHERE id = ?", [id]);
+  const [result] = await pool.execute<ResultSetHeader>("DELETE FROM comments WHERE id = ?", [id]);
+
+  if (result.affectedRows === 0) {
+    return res.status(404).json({ message: "Comment not found" });
+  }
+
   res.status(204).send();
 };

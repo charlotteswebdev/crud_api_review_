@@ -13,14 +13,19 @@ export const createTask = async (req: Request, res: Response) => {
 };
 
 export const getTasks = async (req: Request, res: Response) => {
-  const { project_id } = req.query;
+  const projectId =
+    typeof req.query.project_id === "string"
+      ? req.query.project_id
+      : Array.isArray(req.query.project_id)
+        ? req.query.project_id[0]
+        : undefined;
 
   let query = "SELECT * FROM tasks";
   let params: any[] = [];
 
-  if (project_id) {
+  if (projectId) {
     query += " WHERE project_id = ?";
-    params.push(project_id);
+    params.push(projectId);
   }
 
   const [rows] = await pool.execute(query, params);
