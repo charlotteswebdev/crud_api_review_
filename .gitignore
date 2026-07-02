@@ -1,0 +1,48 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+lerna-debug.log*
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# Jetbrains/VS code IDE files
+.idea/
+.history/
+.vscode
+mot-dvla-import.iml
+
+# Build directories
+artifacts/
+build/
+dist/
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Output of 'npm pack'
+*.tgz
+
+# dotenv environment variables file
+.env
+
+# Serverless directories
+.serverless/
+
+# DynamoDB Local files
+.dynamodb/
+
+# MAC files
+.DS_Store
+/packages/lambda-handlers/.aws-sam/
+/tmp/
+/.run/
+ 
